@@ -96,17 +96,45 @@ private fun SongCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MusicListScreenPreview() {
-    // dummy data and no‑op click
-    MusicList(
-        songs = listOf(
-            Song(1, "33x",         "Perunggu",  "https://via.placeholder.com/100"),
-            Song(2, "Elastic Heart",        "Reality Club",    "https://via.placeholder.com/100"),
-            Song(3, "tarot",        ".Feast",      "https://via.placeholder.com/100")
-        ),
-        playingId = 2L,
-        onSongClick = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MusicListScreenPreview() {
+//    MusicList(
+//        songs = listOf(
+//            Song(
+//                id = 1L,
+//                artist = "33x",
+//                title = "Perunggu",
+//                previewUrl = "https://via.placeholder.com/300.mp3",
+//                artworkUrl = "https://via.placeholder.com/100",
+//                durationMillis = 180_000L
+//            ),
+//            Song(
+//                id = 2L,
+//                artist = "Elastic Heart",
+//                title = "Reality Club",
+//                previewUrl = "https://via.placeholder.com/300.mp3",
+//                artworkUrl = "https://via.placeholder.com/100",
+//                durationMillis = 200_000L
+//            ),
+//            Song(
+//                id = 3L,
+//                artist = "2112",
+//                title = "Rush",
+//                previewUrl = "https://via.placeholder.com/300.mp3",
+//                artworkUrl = "https://via.placeholder.com/100",
+//                durationMillis = 210_000L
+//            ),
+//            Song(
+//                id = 4L,
+//                artist = "Move Along",
+//                title = "Summerlane",
+//                previewUrl = "https://via.placeholder.com/300.mp3",
+//                artworkUrl = "https://via.placeholder.com/100",
+//                durationMillis = 190_000L
+//            )
+//        ),
+//        playingId = 2L,
+//        onSongClick = {}
+//    )
+//}
