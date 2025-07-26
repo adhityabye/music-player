@@ -7,6 +7,6 @@ data class Song(
     @SerializedName("artistName") val artist: String,
     @SerializedName("trackName") val title: String,
     @SerializedName("previewUrl") val previewUrl: String?,
-    @SerializedName("artworkUrl") val artworkUrl: String?,
+    @SerializedName("artworkUrl100") val artworkUrl: String?,
     @SerializedName("trackTimeMillis") val durationMillis: Long
 )
