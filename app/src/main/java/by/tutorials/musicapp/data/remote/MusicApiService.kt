@@ -8,6 +8,7 @@ interface MusicApiService {
     @GET("search")
     suspend fun searchSongs(
         @Query("term") term: String,
-        @Query("limit") limit: Int = 20
+        @Query("limit") limit: Int = 8,
+        @Query("offset")  offset: Int = 0
     ): SongResponse
 }

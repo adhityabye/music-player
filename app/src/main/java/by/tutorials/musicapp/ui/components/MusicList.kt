@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,19 +36,38 @@ fun MusicList(
     modifier: Modifier = Modifier,
     songs: List<Song>,
     playingId: Long?,
-    onSongClick: (Song) -> Unit
+    isLoadingMore: Boolean,
+    endReached: Boolean,
+    onSongClick: (Song)->Unit,
+    onLoadMore: ()->Unit
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(vertical = 8.dp)
-    ) {
+    LazyColumn(modifier) {
         items(songs, key = { it.id }) { song ->
-            SongCard(
-                song      = song,
-                isPlaying = (song.id == playingId),
-                onClick   = { onSongClick(song) }
-            )
+            SongCard(song, isPlaying = song.id == playingId) {
+                onSongClick(song)
+            }
+        }
+
+        if (!endReached) {
+            item {
+                if (isLoadingMore) {
+                    CircularProgressIndicator(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                    )
+                } else {
+                    Button(
+                        onClick = onLoadMore,
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text("Muat Lebih Banyak")
+                    }
+                }
+            }
         }
     }
 }
@@ -95,46 +117,3 @@ private fun SongCard(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun MusicListScreenPreview() {
-//    MusicList(
-//        songs = listOf(
-//            Song(
-//                id = 1L,
-//                artist = "33x",
-//                title = "Perunggu",
-//                previewUrl = "https://via.placeholder.com/300.mp3",
-//                artworkUrl = "https://via.placeholder.com/100",
-//                durationMillis = 180_000L
-//            ),
-//            Song(
-//                id = 2L,
-//                artist = "Elastic Heart",
-//                title = "Reality Club",
-//                previewUrl = "https://via.placeholder.com/300.mp3",
-//                artworkUrl = "https://via.placeholder.com/100",
-//                durationMillis = 200_000L
-//            ),
-//            Song(
-//                id = 3L,
-//                artist = "2112",
-//                title = "Rush",
-//                previewUrl = "https://via.placeholder.com/300.mp3",
-//                artworkUrl = "https://via.placeholder.com/100",
-//                durationMillis = 210_000L
-//            ),
-//            Song(
-//                id = 4L,
-//                artist = "Move Along",
-//                title = "Summerlane",
-//                previewUrl = "https://via.placeholder.com/300.mp3",
-//                artworkUrl = "https://via.placeholder.com/100",
-//                durationMillis = 190_000L
-//            )
-//        ),
-//        playingId = 2L,
-//        onSongClick = {}
-//    )
-//}

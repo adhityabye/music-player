@@ -6,6 +6,7 @@ import by.tutorials.musicapp.data.remote.MusicApiService
 class MusicRepositoryImpl(
     private val api: MusicApiService
 ) : MusicRepository {
-    override suspend fun searchSongs(term: String): List<Song> =
-        api.searchSongs(term).results
+    override suspend fun search(term: String, limit: Int, offset: Int): List<Song> {
+        return api.searchSongs(term, limit, offset).results
+    }
 }

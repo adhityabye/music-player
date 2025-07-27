@@ -1,5 +1,6 @@
 package by.tutorials.musicapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -51,6 +52,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -71,11 +73,16 @@ fun MainScreen(
     val songs by viewModel.songs.collectAsState()
     val loading by viewModel.loading.collectAsState()
     val error by viewModel.error.collectAsState()
+    val endReached  by viewModel.endReached.collectAsState()
 
     fun showMessage(msg: String) {
         scope.launch {
             snackbarHostState.showSnackbar(msg)
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.searchSongs("rock")
     }
 
     Scaffold(
@@ -93,13 +100,7 @@ fun MainScreen(
             SearchBar(
                 text = query,
                 onTextChange = { query = it },
-                onSearch = {
-                    if (query.isBlank()) {
-                        showMessage("Janganlupa masukin nama musik atau penyanyinya yh!")
-                    } else {
-                        viewModel.searchSongs(query)
-                    }
-                }
+                onSearch = { viewModel.searchSongs(query) }
             )
 
             Box(
@@ -108,33 +109,34 @@ fun MainScreen(
                     .fillMaxWidth()
             ) {
                 when {
-                    loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                    error != null -> Text(
-                        text = "error: $error",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    loading && songs.isEmpty() ->
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
 
-                    songs.isEmpty() && query.isNotBlank() -> Text(
-                        text = "Yahh..sayang lagu yang kamu cari tidak ditemukan",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    error != null ->
+                        Text("Error: $error", Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.error)
+
+                    !loading && songs.isEmpty() ->
+                        Text("Tidak ada hasil yang ditemukan", Modifier.align(Alignment.Center))
 
                     else -> MusicList(
-                        songs = songs,
-                        playingId = playingId,
-                        onSongClick = { song ->
-                            song.previewUrl?.let { url ->
+                        songs         = songs,
+                        playingId     = playingId,
+                        isLoadingMore = loading,
+                        endReached    = endReached,
+                        onSongClick   = {
+                            it.previewUrl?.let { url ->
                                 playbackManager.play(url)
+                                playingId = it.id
+                                isPlaying = true
+                            } ?: run {
+                                showMessage("Tidak ada preview untuk ${it.title}")
                             }
-                            playingId = song.id
-                            isPlaying = true
-                            position = 0f
-                            duration = playbackManager.duration().toFloat()
-                        }
+                        },
+                        onLoadMore    = { viewModel.loadMore() }
                     )
                 }
             }
+
             LaunchedEffect(key1 = isPlaying, key2 = playingId) {
                 if (isPlaying && playingId != null) {
 

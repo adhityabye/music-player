@@ -2,6 +2,8 @@ package by.tutorials.musicapp.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -10,6 +12,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -23,16 +26,19 @@ fun SearchBar(
     OutlinedTextField(
         value = text,
         onValueChange = onTextChange,
-        placeholder = { Text("Search for the artist") },
+        placeholder = { Text("Masukkan nama penyanyi atau judul") },
         singleLine = true,
         trailingIcon = {
             IconButton(onClick = onSearch) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Bar"
-                )
+                Icon(Icons.Default.Search, contentDescription = "Search")
             }
         },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { onSearch() }
+        ),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
